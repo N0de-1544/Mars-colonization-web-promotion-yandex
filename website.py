@@ -1,12 +1,33 @@
-from flask import Flask, url_for,request
-
+from flask import Flask, url_for, request
+from random import choices
 
 app = Flask(__name__)
 
+alertstype = ["primary", "secondary", "success", "danger", "warning", "info", "light", "dark"]
+planet = {"Меркурий": ["Эта планета ближе всего к Солнцу.", "Он меньше всех остальных планет солнечной системы.",
+                        "Его можно колонизировать теми же методами, что и Луну",
+                        "Огромные запасы солнечной энергии!", "Огромные залежи ценных руд!"],
+           "Венера": ["Венера находится близко к Земле.", "Атмосфера у нее гораздо плотнее земной.",
+                      "На ней можно будет жить в воздухе!", "Сила притяжения совпадает с землей.",
+                      "На ней много ресурсов!"],
+           "Марс": ["Марс близок к Земле.", "На ней много полезный ресурсов.", "Есть вода и атмосфера.",
+                    "Также есть небольшое магнитное поле.", "На Марсе есть почва для выращивания растений."],
+           "Земля": ["На ней пригодные для жизни условия!", "Есть много воды и можно дышать без скафандра!",
+                     "Много животных и растений!", "Красивый и удобный ландшафт!",
+                     "Погоди, а зачем мы свою же планету колонизируем?"],
+           "Сатурн": ["Планета имеет кольцо из астероидов.", "На нем большое количество газа.",
+                      "Сила притяжения почти равная земной.", "У него большое количество спутников.",
+                      "Он сам по себе довольно красивый."],
+           "Юпитер": ["Он имеет крайне большое количество газа.", "Там может быть новая форма жизни.",
+                      "Юпитер выделяет много энергии.", "Имеет небольшие кольца.", "Он крайне огромен!"],
+           "Уран": ["Эта планета в безопасности от взрыва Солнца.", "Тут есть ископаемые.", "Много льда и газа!",
+                    "Гораздо больше Земли!", "Просто хорошая планета."],
+           "Нептун": ["Холодно.", "Далеко.", "Газовый гигант.", "Почти нет солнечной энергии.", "Не стоит."]}
 
-@app.route('/form_sample', methods=['POST', 'GET'])
-def form_sample():
-    if request.method == 'GET':
+
+@app.route('/choice/<planet_name>')
+def planets(planet_name):
+        chosen_alerts = choices(alertstype, k=5)
         return f'''<!doctype html>
                         <html lang="en">
                           <head>
@@ -20,77 +41,24 @@ def form_sample():
                             <title>Пример формы</title>
                           </head>
                           <body>
-                            <h1>Форма для регистрации в суперсекретной системе</h1>
-                            <div>
-                                <form class="login_form" method="post">
-                                    <input type="text" class="form-control" id="name"  placeholder="Введите Имя" name="name">
-                                    <input type="text" class="form-control" id="surname" placeholder="Введите Фамилию" name="surname">
-                                    <input type="email" class="form-control" id="email" placeholder="Введите e-mail" name="email">
-                                    <div class="form-group">
-                                        <label for="classSelect">Какое ваше образование?</label>
-                                        <select class="form-control" id="classSelect" name="class">
-                                          <option>Дошкольное образование</option>
-                                          <option>Начальное общее образование</option>
-                                          <option>Основное общее образование</option>
-                                          <option>Среднее общее образование</option>
-                                          <option>Среднее профессиональное образование</option>
-                                          <option>Бакалавриат</option>
-                                          <option>Магистратура</option>
-                                          <option>Специалитет</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group form-check>
-                                        <label for="form-check">Какие у Вас есть профессии?</label><br>
-                                        <input type="checkbox" name="prof_1" value="engi-res"> Инженер-исследователь<br>
-                                        <input type="checkbox" name="prof_2" value="pilot"> Пилот<br>
-                                        <input type="checkbox" name="prof_3" value="builder"> Строитель<br>
-                                        <input type="checkbox" name="prof_4" value="exobio"> Экзобиолог<br>
-                                        <input type="checkbox" name="prof_5" value="radprot"> Специалист по радиационной защите<br>
-                                        <input type="checkbox" name="prof_6" value="doctor"> Врач<br>
-                                        <input type="checkbox" name="prof_7" value="cyberengi"> Киберинженер<br>
-                                        <br>       
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="form-check">Укажите пол</label>
-                                        <div class="form-check">
-                                          <input class="form-check-input" type="radio" name="sex" id="male" value="male" checked>
-                                          <label class="form-check-label" for="male">
-                                            Мужской
-                                          </label>
-                                        </div>
-                                        <div class="form-check">
-                                          <input class="form-check-input" type="radio" name="sex" id="female" value="female">
-                                          <label class="form-check-label" for="female">
-                                            Женский
-                                          </label>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="about">Почему Вы хотите принять участие в миссии?</label>
-                                        <textarea class="form-control" id="about" rows="3" name="about"></textarea>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="photo">Приложите фотографию</label>
-                                        <input type="file" class="form-control-file" id="photo" name="file">
-                                    </div>
-                                    <div class="form-group form-check">
-                                        <input type="checkbox" class="form-check-input" id="acceptRules" name="accept">
-                                        <label class="form-check-label" for="acceptRules">Готов работать за идею.</label>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">Записаться</button>
-                                </form>
+                            <h1>Мое предложение: {planet_name}</h1>
+                            <div class="alert alert-{chosen_alerts[0]}" role="alert">
+                            {planet[planet_name][0]}
                             </div>
-                          </body>
-                        </html>'''
-    elif request.method == 'POST':
-        print(request.form['email'])
-        print(request.form['password'])
-        print(request.form['class'])
-        print(request.form['file'])
-        print(request.form['about'])
-        print(request.form['accept'])
-        print(request.form['sex'])
-        return "Форма отправлена"
+                            <div class="alert alert-{chosen_alerts[1]}" role="alert">
+                            {planet[planet_name][1]}
+                            </div>
+                            <div class="alert alert-{chosen_alerts[2]}" role="alert">
+                            {planet[planet_name][2]}
+                            </div>
+                            <div class="alert alert-{chosen_alerts[3]}" role="alert">
+                            {planet[planet_name][3]}
+                            </div>
+                            <div class="alert alert-{chosen_alerts[4]}" role="alert">
+                            {planet[planet_name][4]}
+                            </div>
+                          </body>'''
+                        
 
 
 
